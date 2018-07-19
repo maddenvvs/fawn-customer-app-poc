@@ -1,8 +1,8 @@
 import 'package:fawn_customer/AppConfiguration.dart';
 import 'package:fawn_customer/backend/ApiService.dart';
 import 'package:fawn_customer/backend/UriProvider.dart';
+import 'package:fawn_customer/components/Home/Home.dart';
 import 'package:fawn_customer/models/Order.dart';
-import 'package:fawn_customer/pages/AppHome.dart';
 import 'package:fawn_customer/pages/MakeOrder.dart';
 import 'package:fawn_customer/pages/OrderDetails.dart';
 import 'package:fawn_customer/pages/OrderStatus.dart';
@@ -37,10 +37,6 @@ class _FawnCustomerAppState extends State<FawnCustomerApp> {
     );
   }
 
-  void _handleOnNewOrderPressed(BuildContext context) {
-    Navigator.of(context).pushNamed("/addToOrder");
-  }
-
   void _handleApproveOrderPressed(BuildContext context, Order order) async {
     final orderDTO = await apiService.createNewOrder(order.toDTO());
     order.id = orderDTO.id;
@@ -67,10 +63,8 @@ class _FawnCustomerAppState extends State<FawnCustomerApp> {
       title: "Fawn Customer App",
       theme: theme,
       routes: <String, WidgetBuilder>{
-        "/": (BuildContext context) => AppHome(
-              configuration: _configuration,
-              onNewOrderPressed: _handleOnNewOrderPressed,
-            ),
+        "/": (BuildContext context) => Home(),
+        "/createOrder": (BuildContext context) => Home(),
         "/addToOrder": (BuildContext context) => MakeOrder(
               configuration: _configuration,
               apiService: apiService,
@@ -83,9 +77,6 @@ class _FawnCustomerAppState extends State<FawnCustomerApp> {
             ),
         "/orderDetails": (BuildContext context) => OrderDetails(),
       },
-      showPerformanceOverlay: _configuration.showPerformanceOverlay,
-      showSemanticsDebugger: _configuration.showSemanticsDebugger,
-      debugShowMaterialGrid: _configuration.debugShowMaterialGrid,
     );
   }
 

@@ -12,6 +12,7 @@ class OrderButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return RaisedButton(
+      onPressed: this.onPressed,
       child: Container(
         margin: EdgeInsets.only(
           bottom: 16.0,
@@ -22,7 +23,6 @@ class OrderButton extends StatelessWidget {
           style: theme.textTheme.display1,
         ),
       ),
-      onPressed: this.onPressed,
     );
   }
 }
