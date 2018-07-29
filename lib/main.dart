@@ -1,3 +1,5 @@
+import 'package:fawn_customer/backend/ApiService.dart';
+import 'package:fawn_customer/backend/UriProvider.dart';
 import 'package:fawn_customer/components/App/App.dart';
 import 'package:fawn_customer/epics/epics.dart';
 import 'package:fawn_customer/models/models.dart';
@@ -8,7 +10,6 @@ import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:http/http.dart' as http;
 
-// void main() => runApp(new FawnCustomerApp());
 void main() => runApp(new Root());
 
 class Root extends StatefulWidget {
@@ -17,20 +18,35 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
-  final http.Client _httpClient = http.Client();
+  http.Client _httpClient = http.Client();
 
-  final store = Store<AppState>(
-    appStateReducer,
-    initialState: AppState.debug(),
-    middleware: [
-      EpicMiddleware(createEpic()),
-    ],
-  );
+  Store<AppState> _store;
+
+  _RootState() {
+    _store = Store<AppState>(
+      appStateReducer,
+      initialState: AppState.debug(),
+      middleware: [
+        EpicMiddleware(
+          createEpic(
+            _createApiService,
+          ),
+        ),
+      ],
+    );
+  }
+
+  ApiService _createApiService(String serviceUrl) {
+    return ApiService(
+      UriProvider.forOrigin(serviceUrl),
+      _httpClient,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
-      store: store,
+      store: _store,
       child: App(),
     );
   }
